@@ -1,5 +1,6 @@
 import discord,traceback
 from discord.ext import commands
+from discord.ext.commands.errors import CheckFailure
 client = commands.Bot(command_prefix='!')
 class Admin(commands.Cog):
     def __init__(self,client):
@@ -27,6 +28,13 @@ class Admin(commands.Cog):
                 await member.add_roles(hornyJailRole)
                 msg += "{}!  You're going to horny jail!\n".format(member.name)
         await ctx.send(msg)
+    
+    @horny_jail.error
+    async def on_error(self,ctx,error):
+        if isinstance(error,CheckFailure):
+            await ctx.send("You do not have the horny jail role.  Please add that before running the program again.")
+        else:
+            await ctx.send("Some other error has occured.")
     
     @client.command(help="Changes your top role name",aliases=["changerolename",'rolename'])
     async def change_role_name(self,ctx,*,roleName):
