@@ -1,7 +1,7 @@
 import discord,traceback
 from discord.ext import commands
 from discord.ext.commands.errors import CheckFailure
-client = commands.Bot(command_prefix='!')
+client = commands.Bot(command_prefix='$')
 class Admin(commands.Cog):
     def __init__(self,client):
         self.client = client

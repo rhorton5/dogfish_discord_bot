@@ -4,7 +4,7 @@ from discord.ext import commands
 from cogs.status import Database
 from re import sub
 
-client = commands.Bot(command_prefix="!")
+client = commands.Bot(command_prefix="$")
 
 class Color(commands.Cog):
     def __init__(self,client):
@@ -18,9 +18,14 @@ class Color(commands.Cog):
     def getRGB(self,argument):
         return [int(x) for x in argument.split(",")]
     
-    @client.command(help="Changes your top role color to a new one.",aliases=["edit_color","color","rolecolor","changecolor"])
-    async def change_color(self,ctx,*,color: typing.Optional[str] = "{0[0]},{0[1]},{0[2]}".format([randint(0,255) for x in range(3)])):
+    async def pickRandomRGBValues(self):
+        return "{0[0]},{0[1]},{0[2]}".format([randint(0,255) for x in range(3)])
+    
+    @client.command(help="Changes your top role color to a new one. If no color is specified, a random one is chosen for you.",aliases=["edit_color","color","rolecolor","changecolor"])
+    async def change_color(self,ctx,*,color: typing.Optional[str] = "RANDOM"):
         try:
+            if color == "RANDOM":
+                color = await self.pickRandomRGBValues()
             r,g,b = self.getRGB(color)
             top_role = ctx.author.top_role
             oR,oG,oB = ctx.author.color.to_rgb()

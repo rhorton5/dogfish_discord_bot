@@ -2,7 +2,7 @@ import discord, logging, help
 from discord.ext import commands
 from os import listdir
    
-bot = commands.Bot(command_prefix='!',help_command=help.Help(),intents=discord.Intents.all())
+bot = commands.Bot(command_prefix='$',help_command=help.Help(),intents=discord.Intents.all())
 
 @bot.event
 async def on_ready():
