@@ -4138,3 +4138,15 @@ aiohttp.client_exceptions.ClientConnectorError: Cannot connect to host discord.c
 2021-05-30 10:36:55,308:DEBUG:discord.client: Dispatching event socket_raw_receive
 2021-05-30 10:36:55,308:DEBUG:discord.gateway: For Shard ID None: WebSocket Event: {'t': None, 's': None, 'op': 11, 'd': None}
 2021-05-30 10:36:55,308:DEBUG:discord.client: Dispatching event socket_response
+2021-05-30 10:37:36,467:DEBUG:discord.gateway: Keeping shard ID None websocket alive with sequence 12.
+2021-05-30 10:37:36,563:DEBUG:discord.client: Dispatching event socket_raw_receive
+2021-05-30 10:37:36,563:DEBUG:discord.gateway: For Shard ID None: WebSocket Event: {'t': None, 's': None, 'op': 11, 'd': None}
+2021-05-30 10:37:36,563:DEBUG:discord.client: Dispatching event socket_response
+2021-05-30 10:38:17,718:DEBUG:discord.gateway: Keeping shard ID None websocket alive with sequence 12.
+2021-05-30 10:38:17,818:DEBUG:discord.client: Dispatching event socket_raw_receive
+2021-05-30 10:38:17,818:DEBUG:discord.gateway: For Shard ID None: WebSocket Event: {'t': None, 's': None, 'op': 11, 'd': None}
+2021-05-30 10:38:17,818:DEBUG:discord.client: Dispatching event socket_response
+2021-05-30 10:38:58,971:DEBUG:discord.gateway: Keeping shard ID None websocket alive with sequence 12.
+2021-05-30 10:38:59,066:DEBUG:discord.client: Dispatching event socket_raw_receive
+2021-05-30 10:38:59,067:DEBUG:discord.gateway: For Shard ID None: WebSocket Event: {'t': None, 's': None, 'op': 11, 'd': None}
+2021-05-30 10:38:59,067:DEBUG:discord.client: Dispatching event socket_response
