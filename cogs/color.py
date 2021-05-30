@@ -69,6 +69,7 @@ class Color(commands.Cog):
     @client.command(help="Allows you to use the favorite colors you've saved.\n\n**Subcommands** \nsave <r,g,b> -> Saves color to your list\ndelete <index> -> Deletes a color from your list\nuse <index> -> Change role color to a color in the list.",
                     aliases=["fav_color","favcolor","favoritecolor","favColor","favoriteColor"])
     async def favorite_color(self,ctx,type: str, *, color):
+        #Add a way to view colors from favorite_color...
         db, cursor = await self.database.openDataBase()
         if type.lower() == "save":
             color = "[" + color.replace(","," ") + "]"
@@ -86,8 +87,7 @@ class Color(commands.Cog):
             if await self.use_favorite_color(ctx.author,ctx.author.id,int(color),cursor) is True:
                 await ctx.send("Your color has been set.")
             else:
-                await ctx.send("Invalid index.")
-        
+                await ctx.send("Invalid index.")       
         db.commit()
         db.close()
 

@@ -92,7 +92,7 @@ class Status(commands.Cog):
             xp = old_xp + xp
             if await self.canLevelUp(level,xp) is True:
                 level += 1
-                await message.send("{} has gained a level!".format(message.author.mention))
+                await message.channel.send("{} has gained a level!".format(message.author.mention))
             cursor.execute('''update users set xp = ?, level = ? where user_id = ?''',(xp,level,id,))
             db.commit()
             db.close()
