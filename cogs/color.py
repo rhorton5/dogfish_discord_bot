@@ -4,8 +4,6 @@ from discord.ext import commands
 from cogs.status import Database
 from re import sub
 
-client = commands.Bot(command_prefix="$")
-
 class Color(commands.Cog):
     def __init__(self,client):
         self.client = client
@@ -21,7 +19,7 @@ class Color(commands.Cog):
     async def pickRandomRGBValues(self):
         return "{0[0]},{0[1]},{0[2]}".format([randint(0,255) for x in range(3)])
     
-    @client.command(help="Changes your top role color to a new one. If no color is specified, a random one is chosen for you.",aliases=["edit_color","color","rolecolor","changecolor"])
+    @commands.command(help="Changes your top role color to a new one. If no color is specified, a random one is chosen for you.",aliases=["edit_color","color","rolecolor","changecolor"])
     async def change_color(self,ctx,*,color: typing.Optional[str] = "RANDOM"):
         try:
             if color == "RANDOM":
@@ -34,6 +32,8 @@ class Color(commands.Cog):
         except Exception:
             await ctx.send("Your color has generated an error.")
             traceback.print_exc()
+        finally:
+            color = None
     
     async def save_favorite_color(self,user_id,color,cursor):
         cursor.execute('''select favorite_colors from users where user_id = ?''',(user_id,))
@@ -66,7 +66,7 @@ class Color(commands.Cog):
             return True
         return False
     
-    @client.command(help="Allows you to use the favorite colors you've saved.\n\n**Subcommands** \nsave <r,g,b> -> Saves color to your list\ndelete <index> -> Deletes a color from your list\nuse <index> -> Change role color to a color in the list.",
+    @commands.command(help="Allows you to use the favorite colors you've saved.\n\n**Subcommands** \nsave <r,g,b> -> Saves color to your list\ndelete <index> -> Deletes a color from your list\nuse <index> -> Change role color to a color in the list.",
                     aliases=["fav_color","favcolor","favoritecolor","favColor","favoriteColor"])
     async def favorite_color(self,ctx,type: str, *, color):
         #Add a way to view colors from favorite_color...

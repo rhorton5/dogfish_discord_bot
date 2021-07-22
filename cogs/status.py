@@ -2,7 +2,9 @@ import discord,sqlite3
 from discord.ext import commands
 from discord import Embed
 
-client = commands.Bot(command_prefix='$')
+#client = commands.Bot(command_prefix='$')
+
+#Status is causing the doubles.
 
 class Database():
     def __init__(self):
@@ -53,7 +55,7 @@ class Status(commands.Cog):
             res += "[{}]: {}\n".format(i,favorite_color[i])
         return res        
     
-    @client.command(help="Shows you your current status.",aliases=["me"])
+    @commands.command(help="Shows you your current status.",aliases=["me"])
     async def status(self,ctx):
         id = ctx.author.id
         level,xp,favorite_colors,strength,constitution,dexterity,intelligence,wisdom,charisma,bio = await Database().getStatusData(id)
@@ -66,7 +68,7 @@ class Status(commands.Cog):
         emb.set_image(url=ctx.author.avatar_url)
         await ctx.send(embed=emb)
 
-    @client.command(help="Edit your bio on your status.",alias=["write_bio","edit_bio"])
+    @commands.command(help="Edit your bio on your status.",alias=["write_bio","edit_bio"])
     async def bio(self,ctx,*,bio):
         if len(bio) <= 1024:
             db,cursor = await self.database.openDataBase()
@@ -79,7 +81,7 @@ class Status(commands.Cog):
     
     @commands.Cog.listener()
     async def on_message(self,message):
-        await self.client.process_commands(message)
+        #await self.client.process_commands(message) -> Caused the bot to duplicate commands.
         if message.author.bot is False: 
             author = message.author
             id = author.id
@@ -96,6 +98,7 @@ class Status(commands.Cog):
             cursor.execute('''update users set xp = ?, level = ? where user_id = ?''',(xp,level,id,))
             db.commit()
             db.close()
+    
     
 def setup(client):
     client.add_cog(Status(client))

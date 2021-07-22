@@ -1,9 +1,7 @@
-import discord, requests
+import discord, requests, typing
 from discord.ext import commands
 from discord.ext.tasks import loop
 from time import time, sleep
-
-client = commands.Bot(command_prefix="$")
 
 class API(commands.Cog):
     def __init__(self,client):
@@ -11,8 +9,10 @@ class API(commands.Cog):
         self.insultQueue = []
         self.cheapSharkQueue = []
         self.foxxoQueue = []
+        self.doggoQueue = []
         self.insultRequestQueue.start()
         self.foxxoRequestQueue.start()
+        self.doggoRequestQueue.start()
 
     
     @loop(count=None,seconds=1.0)
@@ -27,7 +27,7 @@ class API(commands.Cog):
             print("Do something... this is stubbed for the time being")
 
 
-    @client.command(help="Get personally insulted by Wrax.",alias=["roast"])
+    @commands.command(help="Get personally insulted by Wrax.",alias=["roast"])
     async def insult(self,ctx):
         self.insultQueue.append(ctx)    
 
@@ -37,13 +37,29 @@ class API(commands.Cog):
             json = requests.get('https://randomfox.ca/floof/').json()
             await self.foxxoQueue.pop(0).send(json['image'])
 
+
+    @loop(count=None,seconds=1.0)
+    async def doggoRequestQueue(self):
+        if(len(self.doggoQueue) != 0):
+            data = self.doggoQueue.pop(0)
+            ctx = data['context']
+            if data['breed'] == None:
+                json = requests.get('https://dog.ceo/api/breeds/image/random').json()
+            else:
+                json = requests.get('https://dog.ceo/api/breed/{}/images/random'.format(data['breed'].lower())).json()
+            if json['status'] == "success":
+                await ctx.send(json['message'])
+            else:
+                await ctx.send(f"An error has occured...\n {json['message']}")
+
     
-    @client.command(help="Sends a picture of foxxos.",alias=["fox"])
+    @commands.command(help="Sends a picture of foxxos.",alias=["fox"])
     async def foxxo(self,ctx):
         self.foxxoQueue.append(ctx)
-
-
+    
+    @commands.command(help="Sends a picture of a doggo.",alias=["dog"])
+    async def doggo(self,ctx,*,breed: typing.Optional[str] = None):
+        self.doggoQueue.append({"context": ctx, "breed": breed})    
 
 def setup(client):
     client.add_cog(API(client))
-    
