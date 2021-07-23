@@ -99,6 +99,58 @@ class Status(commands.Cog):
             db.commit()
             db.close()
     
+    async def getAboutStatusInformation(self):
+       db,cursor = await self.database.openDataBase()
+       #Get Total XP and User Count given to all users from Users
+       cursor.execute('''select sum(xp), count(user_id) from users''')
+       res = cursor.fetchone()
+       print(res)
+       totalXP = int(res[0])
+       userCount = int(res[1])
+
+       cursor.execute('''select count(guild_id) from Guild''')
+       guildCount = int(cursor.fetchone()[0])
+
+       await self.database.closeDataBase(db)
+       return {"totalXP": totalXP, "userCount": userCount,"guildCount": guildCount}    
+
+    @commands.command()
+    async def about(self,ctx):
+        data = await self.getAboutStatusInformation()
+        e = Embed(title="About Wrax!!",description="",color=0x668B8B)
+        e.add_field(name="Overall Status",
+        value=f"Wrax is apart of **{data['guildCount']:,}** guilds.\nHe has given **{data['totalXP']:,}** XP!\nThere are **{data['userCount']}** humans Wrax knows about (maybe less...)",
+        inline=False)
+        await ctx.send(embed=e)
     
+    @commands.command()
+    async def stats(self,ctx):
+        if ctx.author.dm_channel == None:
+            await ctx.author.create_dm()
+        await ctx.send("I'll DM you so you can work on your stats.")
+
+        def number_input(m):
+            return m.content.isdigit() and int(m.content) >= 0
+        
+        await ctx.author.dm_channel.send("Enter your strength")
+        strength = int((await self.client.wait_for('message',check=number_input,timeout=60.0)).content)
+        await ctx.author.dm_channel.send("Enter your dexterity")
+        dexterity = int((await self.client.wait_for('message',check=number_input,timeout=60.0)).content)
+        await ctx.author.dm_channel.send("Enter your constitution")
+        constitution = int((await self.client.wait_for('message',check=number_input,timeout=60.0)).content)
+        await ctx.author.dm_channel.send("Enter your intelligence")
+        intelligence = int((await self.client.wait_for('message',check=number_input,timeout=60.0)).content)
+        await ctx.author.dm_channel.send("Enter your wisdom")
+        wisdom = int((await self.client.wait_for('message',check=number_input,timeout=60.0)).content)
+        await ctx.author.dm_channel.send("Enter your charisma")
+        charisma = int((await self.client.wait_for('message',check=number_input,timeout=60.0)).content)
+
+        db,cursor = await self.database.openDataBase()
+        cursor.execute('''update users set strength = ?, dexterity = ?, constitution = ?, intelligence = ?, wisdom = ?, charisma = ? where user_id = ?''',
+        (strength,dexterity,constitution,intelligence,wisdom,charisma,ctx.author.id,))
+        db.commit()
+        await self.database.closeDataBase(db)
+        await ctx.author.dm_channel.send("Your stats are saved, go check them out now!")
+
 def setup(client):
     client.add_cog(Status(client))

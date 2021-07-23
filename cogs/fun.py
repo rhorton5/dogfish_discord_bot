@@ -3,8 +3,6 @@ import discord
 from discord.ext import commands
 from random import choice, randint, random
 
-#client = commands.Bot(command_prefix="$")
-
 class Fun(commands.Cog):
     def __init__(self,client):
         self.client = client
@@ -68,4 +66,3 @@ class Fun(commands.Cog):
 
 def setup(client):
     client.add_cog(Fun(client))
-    

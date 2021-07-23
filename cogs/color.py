@@ -1,6 +1,7 @@
 import discord,traceback,typing
 from random import randint
 from discord.ext import commands
+from discord.ext.commands.errors import MissingRequiredArgument
 from cogs.status import Database
 from re import sub
 
@@ -90,6 +91,13 @@ class Color(commands.Cog):
                 await ctx.send("Invalid index.")       
         db.commit()
         db.close()
+    
+    @favorite_color.error
+    async def on_error(self,ctx,error):
+        if isinstance(error,MissingRequiredArgument):
+            await ctx.send("Error: You forgot to add a parameter.  Remember you must use save <r,g,b> | delete <index> | use <index>")
+        else:
+            await ctx.send("Error: Some other error occured when using this command.  Please try again.")
 
 
 def setup(client):

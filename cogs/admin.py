@@ -2,8 +2,6 @@ import discord,traceback
 from discord.ext import commands
 from discord.ext.commands.errors import CheckFailure
 
-#Admin is not causing doubles.
-
 class Admin(commands.Cog):
     def __init__(self,client):
         self.client = client
