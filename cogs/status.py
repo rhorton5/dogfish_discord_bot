@@ -2,10 +2,6 @@ import discord,sqlite3
 from discord.ext import commands
 from discord import Embed
 
-#client = commands.Bot(command_prefix='$')
-
-#Status is causing the doubles.
-
 class Database():
     def __init__(self):
         self.database_name = "wrax_database.db"

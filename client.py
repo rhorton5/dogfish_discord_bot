@@ -7,7 +7,10 @@ from random import choice
 
 file = open("config.json","r")
 config = json.load(file)
+maintance_mode = config["maintance"] == "Yes"
 file.close()
+
+
 
 async def getPrefix(bot,message):
     if message.guild == None:
@@ -21,6 +24,10 @@ async def getPrefix(bot,message):
     return prefix
 
 bot = commands.Bot(command_prefix=getPrefix,help_command=help.Help(),intents=discord.Intents.all())
+
+@bot.check
+async def in_maintance_mode(ctx):
+    return not maintance_mode or ctx.author.id == config["developerID"] #Done this way since True is requierd to pass a check.
 
 @bot.check
 async def is_not_muted_channel(ctx):
@@ -40,21 +47,23 @@ async def is_not_muted_channel(ctx):
             dmChannel = await ctx.author.create_dm()
         await dmChannel.send(f"Error: {ctx.channel.name} is apart of a muted channel for {ctx.guild.name}.")
         raise CheckFailure(f"Context is apart of {ctx.guild.name}'s muted channel: {ctx.channel.name}.")
-        
     else:
         return channel_id not in muted_channel_list
 
 @bot.event
 async def on_ready():
     print("{0} is logged in!".format("Wrax"))
-    
+
 @bot.command()
 async def ping(ctx: commands.Context):
     await ctx.send(f"Pong!\nLatency: **{round((bot.latency) * 1000,4)}** ms")
 
 @loop(minutes=30,count=None)
 async def changePresence():
-    await bot.change_presence(activity=discord.Game(choice(config["presence_status"])))
+    if maintance_mode == True:
+        await bot.change_presence(activity=discord.Game("Working on the bot, currently not active for commands at the moment."),status=discord.Status.do_not_disturb)
+    else:
+        await bot.change_presence(activity=discord.Game(choice(config["presence_status"])))
 
 @changePresence.before_loop
 async def beforeChangePresence():
